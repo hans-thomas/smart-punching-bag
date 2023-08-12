@@ -1,5 +1,4 @@
-
-int LEDS[] = {8,9, 10 ,11,12,13};
+int LEDS[] = {8,9,10,11,12};
 int BUTTONS[]= {5,2,6,4,3};
 
 int TOTAL_LEDS;
@@ -10,10 +9,11 @@ int CURRENT_BUTTON_PIN;
 
 unsigned long START_TIME = 0;
 float ELAPSED_TIME = 0;
+float TOTAL_ELAPSED_TIME = 0;
 
 void setup() {
   Serial.begin(9600);
-  
+
   // Calculate count of leds and buttons
   TOTAL_LEDS = sizeof(LEDS)/sizeof(LEDS[0]);
   TOTAL_BUTTONS = sizeof(BUTTONS)/sizeof(BUTTONS[0]);
@@ -30,7 +30,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   if( START_TIME == 0 ){ // Determine there is no active game round
     // Print a message for user whenever a new round started
     Serial.println("Are you ready?");
@@ -55,12 +55,18 @@ void loop() {
     // Store the end time of the current tound
     ELAPSED_TIME = millis() - START_TIME;
 
+    TOTAL_ELAPSED_TIME = TOTAL_ELAPSED_TIME + ELAPSED_TIME / 1000;
+
     // Set selected led off
     digitalWrite(CURRENT_LED_PIN ,LOW);
 
     // Print elapsed time of current round
     Serial.print("Elapsed time: ");
     Serial.print(ELAPSED_TIME/1000,3);
+    Serial.println("s.");
+    // Print total elapsed time
+    Serial.print("Total elapsed time: ");
+    Serial.print(TOTAL_ELAPSED_TIME,3);
     Serial.println("s.");
 
     // Reset the round
@@ -69,7 +75,7 @@ void loop() {
     // Apply one second delay before new round begin
     delay(1000);
   }
-  
+
 }
 
 int select_random_led(){
